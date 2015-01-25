@@ -7,6 +7,7 @@
  */
 namespace Piwik\Tests\Fixtures;
 
+use Piwik\Date;
 use Piwik\Tracker\Visit;
 use Piwik\Tests\Framework\Fixture;
 use PiwikTracker;
@@ -14,7 +15,7 @@ use PiwikTracker;
 class Issue_7056 extends Fixture
 {
     public $idSite = 1;
-    public $dateTime = '2010-03-06 11:22:33';
+    public $dateTime = '2015-01-26 12:12:33';
 
     /**
      * @var \PiwikTracker
@@ -23,6 +24,8 @@ class Issue_7056 extends Fixture
 
     public function setUp()
     {
+        $this->dateTime = Date::now()->getDatetime();
+
         $this->setUpWebsitesAndGoals();
         $this->t = self::getTracker($this->idSite, $this->dateTime, $defaultInit = true);
         $this->trackVisits();
@@ -43,6 +46,7 @@ class Issue_7056 extends Fixture
 
     private function trackVisits()
     {
+        $this->t->setNewVisitorId();
         $this->trackPageView('/index.html', 'incredible title!');
 
         // log in
