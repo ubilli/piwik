@@ -140,6 +140,10 @@ $.extend(DataTable.prototype, UIControl.prototype, {
         return !!$('#dashboardWidgetsArea').length;
     },
 
+    getReportMetadata: function () {
+        return JSON.parse(this.$element.attr('data-report-metadata') || '{}');
+    },
+
     //Reset DataTable filters (used before a reload or view change)
     resetAllFilters: function () {
         var self = this;
@@ -1743,7 +1747,7 @@ $.extend(DataTable.prototype, UIControl.prototype, {
         var self = this;
 
         var merged = $.extend({}, self.param, self.props);
-        var availableActionsForReport = DataTable_RowActions_Registry.getAvailableActionsForReport(merged);
+        var availableActionsForReport = DataTable_RowActions_Registry.getAvailableActionsForReport(merged, undefined, this);
 
         if (availableActionsForReport.length == 0) {
             return;

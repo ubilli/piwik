@@ -19,6 +19,7 @@ use Piwik\NoAccessException;
 use Piwik\Option;
 use Piwik\Period;
 use Piwik\Piwik;
+use Piwik\Plugins\API\API as ApiApi;
 use Piwik\Plugins\PrivacyManager\PrivacyManager;
 use Piwik\View;
 use Piwik\ViewDataTable\Manager as ViewDataTableManager;
@@ -207,6 +208,16 @@ class Visualization extends ViewDataTable
         $view->visualization         = $this;
         $view->visualizationTemplate = static::TEMPLATE_FILE;
         $view->visualizationCssClass = $this->getDefaultDataTableCssClass();
+
+        $idSite = Common::getRequestVar('idSite', null, 'string', $this->request->getRequestArray() + $_GET + $_POST);
+        $module = $this->requestConfig->getApiModuleToRequest();
+        $action = $this->requestConfig->getApiMethodToRequest();
+        $metadata = ApiApi::getInstance()->getMetadata($idSite, $module, $action);
+        $view->reportMetdadata = false;
+        if (!empty($metadata)) {
+            $view->reportMetdadata = array_shift($metadata);
+        }
+
 
         if (null === $this->dataTable) {
             $view->dataTable = null;

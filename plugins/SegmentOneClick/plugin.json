@@ -1,0 +1,19 @@
+{
+ "name": "SegmentOneClick",
+ "version": "0.1.0",
+ "description": "Segment Visitor Log with only one click",
+ "theme": false,
+ "keywords": ["segment", "live", "visitor log", "real time"],
+ "require": {
+    "piwik": ">=2.11.0-b3"
+ },
+ "license": "GPL v3+",
+ "homepage": "http://piwik.org",
+ "authors": [
+     {
+         "name": "Piwik",
+         "email": "hello@piwik.org",
+         "homepage": "http://piwik.org"
+     }
+ ]
+}

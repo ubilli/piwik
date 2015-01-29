@@ -540,7 +540,7 @@ class Report
             if (!empty($segments)) {
                 $report['segments'] = array();
                 foreach ($segments as $segment) {
-                    $report['segments'][] = $segment->getSegment();
+                    $report['segments'][$segment->getSegment()] = Piwik::translate($segment->getName());
                 }
             }
         }

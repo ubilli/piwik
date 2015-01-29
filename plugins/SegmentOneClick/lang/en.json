@@ -1,0 +1,7 @@
+{
+    "SegmentOneClick": {
+        "RowActionTooltipDefault": "Show Visitor Log segmented by this row",
+        "RowActionTooltipWithDimension": "Show Visitor Log segmented by this %s",
+        "RowActionTooltipTitle": "Open segmented Visitor Log"
+    }
+}
