@@ -2,6 +2,7 @@
     "SegmentOneClick": {
         "RowActionTooltipDefault": "Show Visitor Log segmented by this row",
         "RowActionTooltipWithDimension": "Show Visitor Log segmented by this %s",
-        "RowActionTooltipTitle": "Open segmented Visitor Log"
+        "RowActionTooltipTitle": "Open segmented Visitor Log",
+        "SegmentedVisitorLogTitle": "Visitor Log showing visits where %s is \"%s\""
     }
 }

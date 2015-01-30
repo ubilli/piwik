@@ -31,6 +31,7 @@
 
                 {% if showRow %}
                 <tr {% if rowHasSubtable %}id="{{ row.getIdSubDataTable() }}"{% endif %}
+                    data-segment-value="{{ row.getMetadata('segment_value')|e('html_attr') }}"
                     class="{{ row.getMetadata('css_class') }} {% if rowHasSubtable %}subDataTable{% endif %}{% if shouldHighlightRow %} highlight{% endif %}{% if isSummaryRow %} summaryRow{% endif %}"
                     {% if rowHasSubtable %}title="{{ 'CoreHome_ClickRowToExpandOrContract'|translate }}"{% endif %}>
                     {% for column in properties.columns_to_display %}

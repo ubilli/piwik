@@ -36,5 +36,6 @@ class SegmentOneClick extends \Piwik\Plugin
         $translationKeys[] = "SegmentOneClick_RowActionTooltipTitle";
         $translationKeys[] = "SegmentOneClick_RowActionTooltipDefault";
         $translationKeys[] = "SegmentOneClick_RowActionTooltipWithDimension";
+        $translationKeys[] = "SegmentOneClick_SegmentedVisitorLogTitle";
     }
 }

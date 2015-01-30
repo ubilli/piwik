@@ -198,12 +198,40 @@ class Segment
 
     /**
      * Returns the name of this segment as it should appear in segment expressions.
-     *
+     * @ignore
      * @return string
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     *
+     * @ignore
+     * @return string|\Callable|array
+     */
+    public function getSqlFilter()
+    {
+        return $this->sqlFilter;
+    }
+
+    /**
+     * @ignore
+     * @return string|\Callable|array
+     */
+    public function getSqlFilterValue()
+    {
+        return $this->sqlFilterValue;
+    }
+
+    /**
+     * @ignore
+     * @return string|\Callable|array
+     */
+    public function getSuggestedValuesCallback()
+    {
+        return $this->suggestedValuesCallback;
     }
 
     /**

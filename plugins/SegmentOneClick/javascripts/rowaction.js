@@ -13,6 +13,85 @@
     
     var actionName = 'SegmentVisitorLog';
 
+    function getLabelFromTr (tr) {
+        var label = tr.find('span.label');
+
+        // handle truncation
+        var value = label.data('originalText');
+
+        if (!value) {
+            value = label.text();
+        }
+        value = value.trim();
+
+        // if tr is a terminal node, we use the @ operator to distinguish it from branch nodes w/ the same name
+        if (tr.hasClass('subDataTable')) {
+            value = '/' + value; // TODO we should not always use "/" only for page urls!?!
+        }
+
+        return value;
+    }
+
+    function getFullLabelFromTr(tr, e, subTableLabel) {
+
+        var label = getLabelFromTr(tr);
+
+        // if we have received the event from the sub table, add the label
+        if (subTableLabel) {
+            var separator = ''; // LabelFilter::SEPARATOR_RECURSIVE_LABEL
+            label += separator + subTableLabel;
+        }
+
+        // handle sub tables in nested reports: forward to parent
+        var subtable = tr.closest('table');
+        if (subtable.is('.subDataTable')) {
+            label = getFullLabelFromTr(subtable.closest('tr').prev(), e, label);
+        }
+
+        // ascend in action reports
+        if (subtable.closest('div.dataTableActions').length) {
+            var allClasses = tr.attr('class');
+            var matches = allClasses.match(/level[0-9]+/);
+            var level = parseInt(matches[0].substring(5, matches[0].length), 10);
+            if (level > 0) {
+                // .prev(.levelX) does not work for some reason => do it "by hand"
+                var findLevel = 'level' + (level - 1);
+                var ptr = tr;
+                while ((ptr = ptr.prev()).size() > 0) {
+                    if (!ptr.hasClass(findLevel) || ptr.hasClass('nodata')) {
+                        continue;
+                    }
+
+                    label = getFullLabelFromTr(ptr, e, label);
+                    return label;
+                }
+            }
+        }
+
+        return label;
+    }
+
+    function getRawSegmentValueFromRow(tr)
+    {
+        return $(tr).attr('data-segment-value');
+    }
+
+    function findTitleOfRowHavingRawSegmentValue(apiMethod, rawSegmentValue)
+    {
+        var $tr = $('[data-report="' + apiMethod + '"] tr[data-segment-value="' + rawSegmentValue + '"]').first();
+
+        if ($tr) {
+            var label = getFullLabelFromTr($tr);
+         //   var label = $tr.find('.label .value').text();
+
+            if (label) {
+                rawSegmentValue = $.trim(label);
+            }
+        }
+
+        return rawSegmentValue;
+    }
+
     function getDataTableFromApiMethod(apiMethod)
     {
         var div = $(require('piwik/UI').DataTable.getDataTableByReport(apiMethod));
@@ -84,8 +163,7 @@
         // has to be overridden in subclasses
         this.trEventName = 'piwikTriggerSegmentVisitorLogAction';
 
-        // TODO we need to use == instead of =@ (contains) as soon as we have the actual value available for segmentation
-        this.segmentComparison = '=@';
+        this.segmentComparison = '==';
         this.segment = getFirstSegmentFromDataTable(dataTable);
     }
 
@@ -95,6 +173,17 @@
         var urlParam = apiMethod + ':' + segment + ':' + encodeURIComponent(JSON.stringify(extraParams));
 
         broadcast.propagateNewPopoverParameter('RowAction', actionName + ':' + urlParam);
+    };
+
+    DataTable_RowActions_SegmentVisitorLog.isPageActionReport = function (module, action) {
+        return module == 'Actions' &&
+        (action == 'getPageUrls' || action == 'getEntryPageUrls' || action == 'getExitPageUrls' || action == 'getPageUrlsFollowingSiteSearch' || action == 'getPageTitles' || action == 'getPageTitlesFollowingSiteSearch');
+    };
+
+    DataTable_RowActions_SegmentVisitorLog.prototype.trigger = function (tr, e, subTableLabel) {
+        var label = getRawSegmentValueFromRow(tr);
+
+        this.performAction(label, tr, e);
     };
 
     DataTable_RowActions_SegmentVisitorLog.prototype.performAction = function (label, tr, e) {
@@ -138,33 +227,29 @@
         var callback = function (html) {
             Piwik_Popover.setContent(html);
 
-            // use the popover title returned from the server
+            // remove title returned from the server
             var title = box.find('h2[piwik-enriched-headline]');
             if (title.size() > 0) {
-                // TODO use translation of segment name and translation in general
-                var segmentParts = segment.split(self.segmentComparison);
-                var dataTable    = getDataTableFromApiMethod(apiMethod);
-                var segmentName  = getNameOfSegmentFromDataTable(dataTable, segmentParts[0]);
-                var segmentValue = decodeURIComponent(segmentParts[1]);
-
-                // TODO move escape to piwikhelper or somewhere better
-                var escape = angular.element(document).injector().get('$sanitize');
-                segmentName = escape(segmentName);
-                segmentValue = escape(segmentValue);
-
-                Piwik_Popover.setTitle(title.html() + ' showing visits where ' + segmentName + ' is "' + segmentValue + '"');
                 title.remove();
             }
 
-            box.find('.visitor-log-visitor-profile-link').remove();
-            /* TODO replace links within visitor log to ajax requests etc for example like this:
+            var segmentParts = segment.split(self.segmentComparison);
+            var dataTable    = getDataTableFromApiMethod(apiMethod);
+            var segmentName  = getNameOfSegmentFromDataTable(dataTable, segmentParts[0]);
+            var segmentValue = findTitleOfRowHavingRawSegmentValue(apiMethod, segmentParts[1]);
+
+            segmentName  = piwikHelper.escape(segmentName);
+            segmentValue = piwikHelper.escape(segmentValue);
+
+            var title = _pk_translate('SegmentOneClick_SegmentedVisitorLogTitle', [segmentName, segmentValue]);
+
+            Piwik_Popover.setTitle(title);
+
+            // TODO remove visitor profile link or close popover??? as we won't have a "go back" link
+            //box.find('.visitor-log-visitor-profile-link').remove();
             box.find('.visitor-log-visitor-profile-link').click(function () {
-                var metric = $(this).val();
-                Piwik_Popover.onClose(false); // unbind listener that resets multiEvolutionRows
-                var extraParams = {action: 'getMultiRowEvolutionPopover', column: metric};
-                self.openPopover(segment, extraParams, label);
-                return true;
-            });*/
+                Piwik_Popover.close();
+            });
         };
 
         // prepare loading the popover contents
@@ -204,7 +289,16 @@
         },
 
         isAvailableOnRow: function (dataTableParams, tr) {
-            // TODO here we most likely have to update `this.dataTableIconTooltip` to include the name of segment and value
+            if (!getRawSegmentValueFromRow(tr)) {
+                return false;
+            }
+
+            if (tr.hasClass('subDataTable')) {
+                if (DataTable_RowActions_SegmentVisitorLog.isPageActionReport(dataTableParams.module, dataTableParams.action))
+                {
+                    return false;
+                }
+            }
 
             var reportTitle = null;
 
@@ -218,6 +312,7 @@
             }
 
             this.dataTableIconTooltip[1] = reportTitle;
+
             return true;
         },
 

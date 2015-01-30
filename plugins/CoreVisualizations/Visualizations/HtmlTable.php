@@ -10,6 +10,7 @@ namespace Piwik\Plugins\CoreVisualizations\Visualizations;
 
 use Piwik\API\Request as ApiRequest;
 use Piwik\Common;
+use Piwik\DataTable;
 use Piwik\Period;
 use Piwik\Plugin\Visualization;
 use Piwik\View;
@@ -34,6 +35,52 @@ class HtmlTable extends Visualization
     public static function getDefaultRequestConfig()
     {
         return new HtmlTable\RequestConfig();
+    }
+
+    public function beforeLoadDataTable()
+    {
+        parent::beforeLoadDataTable();
+        $report = $this->report;
+
+        $this->config->filters[] = function (DataTable $dataTable) use ($report) {
+
+            if (empty($report) || empty($dataTable) || !$dataTable->getRowsCount()) {
+                return;
+            }
+
+            $dimension = $report->getDimension();
+
+            if (empty($dimension)) {
+                return;
+            }
+
+            $segments = $dimension->getSegments();
+
+            if (empty($segments)) {
+                return;
+            }
+
+            $segment     = array_shift($segments);
+            $hasCallback = $segment->getSqlFilter() || $segment->getSqlFilterValue();
+
+            if ($segment->getSuggestedValuesCallback()) {
+                return;
+            }
+
+            foreach ($dataTable->getRows() as $row) {
+                if ($hasCallback) {
+                    $row->setMetadata('segment_value', $row->getColumn('label'));
+                } else {
+                    $label = $row->getMetadata('original_label');
+
+                    if (false === $label) {
+                        $label = $row->getColumn('label');
+                    }
+
+                    $row->setMetadata('segment_value', $label);
+                }
+            }
+        };
     }
 
     public function beforeRender()
