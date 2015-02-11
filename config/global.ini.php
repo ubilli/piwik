@@ -759,6 +759,7 @@ Plugins[] = TestRunner
 Plugins[] = BulkTracking
 Plugins[] = Resolution
 Plugins[] = DevicePlugins
+Plugins[] = SegmentOneClick
 
 [PluginsInstalled]
 PluginsInstalled[] = Login
