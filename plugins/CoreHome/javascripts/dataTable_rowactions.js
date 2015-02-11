@@ -26,14 +26,14 @@ var DataTable_RowActions_Registry = {
         this.registry.push(action);
     },
 
-    getAvailableActionsForReport: function (dataTableParams, tr, dataTable) {
+    getAvailableActionsForReport: function (dataTableParams, tr) {
         if (dataTableParams.disable_row_actions == '1') {
             return [];
         }
 
         var available = [];
         for (var i = 0; i < this.registry.length; i++) {
-            if (this.registry[i].isAvailableOnReport(dataTableParams, tr, dataTable)) {
+            if (this.registry[i].isAvailableOnReport(dataTableParams, tr)) {
                 available.push(this.registry[i]);
             }
         }

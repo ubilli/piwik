@@ -10,10 +10,8 @@ namespace Piwik\Plugins\CoreVisualizations\Visualizations;
 
 use Piwik\API\Request as ApiRequest;
 use Piwik\Common;
-use Piwik\DataTable;
 use Piwik\Period;
 use Piwik\Plugin\Visualization;
-use Piwik\Plugin\Segment;
 use Piwik\View;
 
 /**

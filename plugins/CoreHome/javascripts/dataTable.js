@@ -1747,7 +1747,7 @@ $.extend(DataTable.prototype, UIControl.prototype, {
         var self = this;
 
         var merged = $.extend({}, self.param, self.props);
-        var availableActionsForReport = DataTable_RowActions_Registry.getAvailableActionsForReport(merged, undefined, this);
+        var availableActionsForReport = DataTable_RowActions_Registry.getAvailableActionsForReport(merged);
 
         if (availableActionsForReport.length == 0) {
             return;

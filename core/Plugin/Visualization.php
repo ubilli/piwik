@@ -208,16 +208,7 @@ class Visualization extends ViewDataTable
         $view->visualization         = $this;
         $view->visualizationTemplate = static::TEMPLATE_FILE;
         $view->visualizationCssClass = $this->getDefaultDataTableCssClass();
-
-        $idSite = Common::getRequestVar('idSite', null, 'string', $this->request->getRequestArray() + $_GET + $_POST);
-        $module = $this->requestConfig->getApiModuleToRequest();
-        $action = $this->requestConfig->getApiMethodToRequest();
-        $metadata = ApiApi::getInstance()->getMetadata($idSite, $module, $action);
-        $view->reportMetdadata = false;
-        if (!empty($metadata)) {
-            $view->reportMetdadata = array_shift($metadata);
-        }
-
+        $view->reportMetdadata = $this->getReportMetadata();
 
         if (null === $this->dataTable) {
             $view->dataTable = null;
@@ -240,6 +231,22 @@ class Visualization extends ViewDataTable
         $view->isWidget    = Common::getRequestVar('widget', 0, 'int');
 
         return $view;
+    }
+
+    private function getReportMetadata()
+    {
+        $request = $this->request->getRequestArray() + $_GET + $_POST;
+
+        $idSite  = Common::getRequestVar('idSite', null, 'string', $request);
+        $module  = $this->requestConfig->getApiModuleToRequest();
+        $action  = $this->requestConfig->getApiMethodToRequest();
+        $metadata = ApiApi::getInstance()->getMetadata($idSite, $module, $action);
+
+        if (!empty($metadata)) {
+            return array_shift($metadata);
+        }
+
+        return false;
     }
 
     private function overrideSomeConfigPropertiesIfNeeded()

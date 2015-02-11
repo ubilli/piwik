@@ -145,11 +145,7 @@ class DataTablePostProcessor
             }
         });
 
-        $dataTable->filter(function (DataTable $dataTable) use ($report) {
-            foreach ($dataTable->getRows() as $row) {
-                $row->deleteMetadata('segmentValue');
-            }
-        });
+        $dataTable->filter('ColumnCallbackDeleteMetadata', array('segmentValue'));
 
         return $dataTable;
     }

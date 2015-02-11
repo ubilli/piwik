@@ -71,40 +71,6 @@
         }
     }
 
-    function getSegmentsFromDataTable(dataTable)
-    {
-        var metadata = getMetadataFromDataTable(dataTable);
-
-        if (metadata && $.isPlainObject(metadata.segments))
-        {
-            return metadata.segments;
-        }
-    }
-
-    function getFirstSegmentFromDataTable(dataTable)
-    {
-        var segments = getSegmentsFromDataTable(dataTable);
-
-        if (segments)
-        {
-            for (var segmentName in segments) {
-                return segmentName;
-            }
-        }
-    }
-
-    function getNameOfSegmentFromDataTable(dataTable, segmentName)
-    {
-        var segments = getSegmentsFromDataTable(dataTable);
-
-        if (segments && segments[segmentName])
-        {
-            return segments[segmentName];
-        }
-
-        return segmentName;
-    }
-
     function DataTable_RowActions_SegmentVisitorLog(dataTable) {
         this.dataTable = dataTable;
         this.actionName = actionName;
@@ -219,16 +185,8 @@
             _pk_translate('SegmentOneClick_RowActionTooltipDefault')
         ],
 
-        isAvailableOnReport: function (dataTableParams, undefined, dataTable) {
-            var hasSegment = !!getFirstSegmentFromDataTable(dataTable);
-
-            if (hasSegment) {
-                return true;
-            }
-
-            var segmentFilters = dataTable.$element.find('[data-segment-filter]');
-
-            return !!segmentFilters.length;
+        isAvailableOnReport: function (dataTableParams, undefined) {
+            return true;
         },
 
         isAvailableOnRow: function (dataTableParams, tr) {
