@@ -51,7 +51,6 @@ class Segment
     private $acceptValues;
     private $permission;
     private $suggestedValuesCallback;
-    private $labelToValueMapping;
 
     /**
      * @ignore
@@ -116,41 +115,6 @@ class Segment
     public function setSegment($segment)
     {
         $this->segment = $segment;
-    }
-
-    public function setLabelToValueMapping($values)
-    {
-        $this->labelToValueMapping = $values;
-
-        if (empty($this->sqlFilter)) {
-            $segment = $this;
-            $this->setSqlFilter(function ($value) use ($segment) {
-                $values = $segment->getLabelToValueMapping();
-                $index = array_search(strtolower(trim(urldecode($value))), $values);
-                if ($index === false) {
-                    $valuesList = implode(', ', $values);
-                    $segmentName = $segment->getSegment();
-                    throw new \Exception("segment $segmentName must be one of: $valuesList");
-                }
-                return $index;
-            });
-        }
-
-        if (empty($this->acceptValues)) {
-            $this->setAcceptedValues(implode(', ', $values));
-        }
-    }
-
-    public function getLabelToValueMapping()
-    {
-        return $this->labelToValueMapping;
-    }
-
-    public function getSegmentValueForLabel($label)
-    {
-        if (!empty($this->acceptValues[$label])) {
-            return $this->labelToValueMapping[$label];
-        }
     }
 
     /**
