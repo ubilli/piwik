@@ -457,7 +457,6 @@ class API extends \Piwik\Plugin\API
             foreach ($dataTable->getRows() as $row) {
                 $url = $row->getMetadata('url');
                 if ($url) {
-                    $row->setMetadata('full_label', urldecode($url));
                     $row->setMetadata('segmentValue', urldecode($url));
                 }
             }

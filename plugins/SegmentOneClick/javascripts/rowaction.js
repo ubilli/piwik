@@ -13,9 +13,14 @@
     
     var actionName = 'SegmentVisitorLog';
 
-    function getLabelFromTr ($tr) {
+    function getLabelFromTr ($tr, apiMethod) {
+        var label;
 
-        var label = $tr.attr('data-full-label');
+        if (apiMethod && 0 === apiMethod.indexOf('Actions.')) {
+            // for now only use this for Actions... I know a hack :( Otherwise in Search Engines
+            // it would show "http://www.searchenginename.org" instead of "SearchEngineName"
+            label = $tr.attr('data-url-label');
+        }
 
         if (!label) {
             label = $tr.find('.label .value').text();
@@ -38,7 +43,7 @@
         var segmentValue = decodeURIComponent(rawSegmentValue);
         var $tr = $('[data-report="' + apiMethod + '"] tr[data-segment-filter="' + segmentValue + '"]').first();
 
-        return getLabelFromTr($tr);
+        return getLabelFromTr($tr, apiMethod);
     }
 
     function getDataTableFromApiMethod(apiMethod)
