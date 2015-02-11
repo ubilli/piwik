@@ -125,7 +125,6 @@ class API extends \Piwik\Plugin\API
         }
 
         $dataTable = $dataTable->mergeSubtables($labelColumn = 'referer_type', $useMetadataColumn = true);
-
         $dataTable->filter('Sort', array(Metrics::INDEX_NB_VISITS, 'desc'));
         $dataTable->queueFilter('ReplaceColumnNames');
         $dataTable->queueFilter('ReplaceSummaryRowLabel');
@@ -136,6 +135,7 @@ class API extends \Piwik\Plugin\API
     public function getKeywords($idSite, $period, $date, $segment = false, $expanded = false)
     {
         $dataTable = $this->getDataTable(Archiver::KEYWORDS_RECORD_NAME, $idSite, $period, $date, $segment, $expanded);
+        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
         $dataTable = $this->handleKeywordNotDefined($dataTable);
         return $dataTable;
     }
@@ -234,6 +234,15 @@ class API extends \Piwik\Plugin\API
     public function getSearchEngines($idSite, $period, $date, $segment = false, $expanded = false)
     {
         $dataTable = $this->getDataTable(Archiver::SEARCH_ENGINES_RECORD_NAME, $idSite, $period, $date, $segment, $expanded);
+        $dataTable->filter(function (DataTable $dataTable) {
+            foreach ($dataTable->getRows() as $row) {
+                $label = $row->getColumn('label');
+                if (!empty($label)) {
+                    $filter = 'referrerType==search;referrerName==' . $label;
+                    $row->setMetadata('segmentFilter', $filter);
+                }
+            }
+        });
         $dataTable->queueFilter('ColumnCallbackAddMetadata', array('label', 'url', __NAMESPACE__ . '\getSearchEngineUrlFromName'));
         $dataTable->queueFilter('MetadataCallbackAddMetadata', array('url', 'logo', __NAMESPACE__ . '\getSearchEngineLogoFromUrl'));
         return $dataTable;
@@ -273,6 +282,15 @@ class API extends \Piwik\Plugin\API
     public function getCampaigns($idSite, $period, $date, $segment = false, $expanded = false)
     {
         $dataTable = $this->getDataTable(Archiver::CAMPAIGNS_RECORD_NAME, $idSite, $period, $date, $segment, $expanded);
+        $dataTable->filter(function (DataTable $dataTable) {
+            foreach ($dataTable->getRows() as $row) {
+                $label = $row->getColumn('label');
+                if (!empty($label)) {
+                    $filter = 'referrerType==campaign;referrerName==' . $label;
+                    $row->setMetadata('segmentFilter', $filter);
+                }
+            }
+        });
         return $dataTable;
     }
 
@@ -285,6 +303,15 @@ class API extends \Piwik\Plugin\API
     public function getWebsites($idSite, $period, $date, $segment = false, $expanded = false)
     {
         $dataTable = $this->getDataTable(Archiver::WEBSITES_RECORD_NAME, $idSite, $period, $date, $segment, $expanded);
+        $dataTable->filter(function (DataTable $dataTable) {
+            foreach ($dataTable->getRows() as $row) {
+                $label = $row->getColumn('label');
+                if (!empty($label)) {
+                    $filter = 'referrerName==' . $label;
+                    $row->setMetadata('segmentFilter', $filter);
+                }
+            }
+        });
         return $dataTable;
     }
 
@@ -314,9 +341,7 @@ class API extends \Piwik\Plugin\API
     public function getSocials($idSite, $period, $date, $segment = false, $expanded = false)
     {
         $dataTable = $this->getDataTable(Archiver::WEBSITES_RECORD_NAME, $idSite, $period, $date, $segment, $expanded);
-
         $dataTable->filter('ColumnCallbackDeleteRow', array('label', function ($url) { return !isSocialUrl($url); }));
-
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'url', __NAMESPACE__ . '\getSocialMainUrl'));
         $dataTable->filter('GroupBy', array('label', __NAMESPACE__ . '\getSocialNetworkFromDomain'));
 

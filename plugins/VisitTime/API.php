@@ -31,6 +31,7 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasViewAccess($idSite);
         $archive = Archive::build($idSite, $period, $date, $segment);
         $dataTable = $archive->getDataTable($name);
+
         $dataTable->filter('Sort', array('label', 'asc', true));
         $dataTable->queueFilter('ColumnCallbackReplace', array('label', __NAMESPACE__ . '\getTimeLabel'));
         $dataTable->queueFilter('ReplaceColumnNames');
@@ -39,12 +40,30 @@ class API extends \Piwik\Plugin\API
 
     public function getVisitInformationPerLocalTime($idSite, $period, $date, $segment = false)
     {
-        return $this->getDataTable(Archiver::LOCAL_TIME_RECORD_NAME, $idSite, $period, $date, $segment);
+        $table = $this->getDataTable(Archiver::LOCAL_TIME_RECORD_NAME, $idSite, $period, $date, $segment);
+        $table->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
+
+        return $table;
     }
 
     public function getVisitInformationPerServerTime($idSite, $period, $date, $segment = false, $hideFutureHoursWhenToday = false)
     {
         $table = $this->getDataTable(Archiver::SERVER_TIME_RECORD_NAME, $idSite, $period, $date, $segment);
+
+        $table->filter(function(DataTable $dataTable) use ($idSite, $date) {
+            $timezone = Site::getTimezoneFor($idSite);
+            foreach ($dataTable->getRows() as $row) {
+                $hour = $row->getColumn('label');
+                $hour = str_pad($hour, 2, 0, STR_PAD_LEFT);
+
+                $dateI = Date::factory($date)->setTime($hour . ':00:00')->setTimezone($timezone);
+                $x = $dateI->getDatetime();
+                $hourInTz = Date::factory($x, 'UTC')->toString('G');
+
+                $row->setMetadata('segmentValue', $hourInTz);
+            }
+        });
+
         if ($hideFutureHoursWhenToday) {
             $table = $this->removeHoursInFuture($table, $idSite, $period, $date);
         }

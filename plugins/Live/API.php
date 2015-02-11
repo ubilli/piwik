@@ -268,6 +268,10 @@ class API extends \Piwik\Plugin\API
                 $visitorDetailsArray['serverDatePrettyFirstAction'] = $dateTimeVisitFirstAction->getLocalized(Piwik::translate('CoreHome_ShortDateFormat'));
                 $visitorDetailsArray['serverTimePrettyFirstAction'] = $dateTimeVisitFirstAction->getLocalized('%time%');
 
+                $dateTimeVisitLastAction = Date::factory($visitorDetailsArray['lastActionTimestamp'], $timezone);
+                $visitorDetailsArray['serverDatePrettyLastAction'] = $dateTimeVisitLastAction->getLocalized(Piwik::translate('CoreHome_ShortDateFormat'));
+                $visitorDetailsArray['serverTimePrettyLastAction'] = $dateTimeVisitLastAction->getLocalized('%time%');
+
                 $visitorDetailsArray['actionDetails'] = array();
                 if (!$doNotFetchActions) {
                     $visitorDetailsArray = Visitor::enrichVisitorArrayWithActions($visitorDetailsArray, $actionsLimit, $timezone);

@@ -100,6 +100,56 @@ class DataTablePostProcessor
         $dataTable = $this->applyLabelFilter($dataTable);
 
         $dataTable = $this->applyMetricsFormatting($dataTable);
+        $dataTable = $this->convertSegmentValueToSegmentFilter($dataTable);
+
+        return $dataTable;
+    }
+
+    public function convertSegmentValueToSegmentFilter(DataTableInterface $dataTable)
+    {
+        $report = $this->report;
+
+        $dataTable->filter(function (DataTable $dataTable) use ($report) {
+
+            if (empty($report) || empty($dataTable) || !$dataTable->getRowsCount()) {
+                return;
+            }
+
+            $dimension = $report->getDimension();
+
+            if (empty($dimension)) {
+                return;
+            }
+
+            $segments = $dimension->getSegments();
+
+            if (empty($segments)) {
+                return;
+            }
+
+            /** @var \Piwik\Plugin\Segment $segment */
+            $segment = array_shift($segments);
+            $segmentName = $segment->getSegment();
+
+            $search  = array(',', ';', '&');
+            $replace = array(urlencode(','), urlencode(';'), urlencode('&'));
+
+            foreach ($dataTable->getRows() as $row) {
+                $value  = $row->getMetadata('segmentValue');
+                $filter = $row->getMetadata('segmentFilter');
+
+                if ($value !== false && $filter === false) {
+                    $value = str_replace($search, $replace, $value);
+                    $row->setMetadata('segmentFilter', sprintf('%s==%s', $segmentName, $value));
+                }
+            }
+        });
+
+        $dataTable->filter(function (DataTable $dataTable) use ($report) {
+            foreach ($dataTable->getRows() as $row) {
+                $row->deleteMetadata('segmentValue');
+            }
+        });
 
         return $dataTable;
     }

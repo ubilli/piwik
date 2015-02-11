@@ -13,59 +13,16 @@
     
     var actionName = 'SegmentVisitorLog';
 
-    function getLabelFromTr (tr) {
-        var label = tr.find('span.label');
+    function getLabelFromTr ($tr) {
 
-        // handle truncation
-        var value = label.data('originalText');
+        var label = $tr.attr('data-full-label');
 
-        if (!value) {
-            value = label.text();
-        }
-        value = value.trim();
-
-        // if tr is a terminal node, we use the @ operator to distinguish it from branch nodes w/ the same name
-        if (tr.hasClass('subDataTable')) {
-            value = '/' + value; // TODO we should not always use "/" only for page urls!?!
+        if (!label) {
+            label = $tr.find('.label .value').text();
         }
 
-        return value;
-    }
-
-    function getFullLabelFromTr(tr, e, subTableLabel) {
-
-        var label = getLabelFromTr(tr);
-
-        // if we have received the event from the sub table, add the label
-        if (subTableLabel) {
-            var separator = ''; // LabelFilter::SEPARATOR_RECURSIVE_LABEL
-            label += separator + subTableLabel;
-        }
-
-        // handle sub tables in nested reports: forward to parent
-        var subtable = tr.closest('table');
-        if (subtable.is('.subDataTable')) {
-            label = getFullLabelFromTr(subtable.closest('tr').prev(), e, label);
-        }
-
-        // ascend in action reports
-        if (subtable.closest('div.dataTableActions').length) {
-            var allClasses = tr.attr('class');
-            var matches = allClasses.match(/level[0-9]+/);
-            var level = parseInt(matches[0].substring(5, matches[0].length), 10);
-            if (level > 0) {
-                // .prev(.levelX) does not work for some reason => do it "by hand"
-                var findLevel = 'level' + (level - 1);
-                var ptr = tr;
-                while ((ptr = ptr.prev()).size() > 0) {
-                    if (!ptr.hasClass(findLevel) || ptr.hasClass('nodata')) {
-                        continue;
-                    }
-
-                    label = getFullLabelFromTr(ptr, e, label);
-                    return label;
-                }
-            }
+        if (label) {
+            label = $.trim(label);
         }
 
         return label;
@@ -73,23 +30,15 @@
 
     function getRawSegmentValueFromRow(tr)
     {
-        return $(tr).attr('data-segment-value');
+        return $(tr).attr('data-segment-filter');
     }
 
     function findTitleOfRowHavingRawSegmentValue(apiMethod, rawSegmentValue)
     {
-        var $tr = $('[data-report="' + apiMethod + '"] tr[data-segment-value="' + rawSegmentValue + '"]').first();
+        var segmentValue = decodeURIComponent(rawSegmentValue);
+        var $tr = $('[data-report="' + apiMethod + '"] tr[data-segment-filter="' + segmentValue + '"]').first();
 
-        if ($tr) {
-            var label = getFullLabelFromTr($tr);
-         //   var label = $tr.find('.label .value').text();
-
-            if (label) {
-                rawSegmentValue = $.trim(label);
-            }
-        }
-
-        return rawSegmentValue;
+        return getLabelFromTr($tr);
     }
 
     function getDataTableFromApiMethod(apiMethod)
@@ -164,7 +113,6 @@
         this.trEventName = 'piwikTriggerSegmentVisitorLogAction';
 
         this.segmentComparison = '==';
-        this.segment = getFirstSegmentFromDataTable(dataTable);
     }
 
     DataTable_RowActions_SegmentVisitorLog.prototype = new DataTable_RowAction();
@@ -175,11 +123,6 @@
         broadcast.propagateNewPopoverParameter('RowAction', actionName + ':' + urlParam);
     };
 
-    DataTable_RowActions_SegmentVisitorLog.isPageActionReport = function (module, action) {
-        return module == 'Actions' &&
-        (action == 'getPageUrls' || action == 'getEntryPageUrls' || action == 'getExitPageUrls' || action == 'getPageUrlsFollowingSiteSearch' || action == 'getPageTitles' || action == 'getPageTitlesFollowingSiteSearch');
-    };
-
     DataTable_RowActions_SegmentVisitorLog.prototype.trigger = function (tr, e, subTableLabel) {
         var label = getRawSegmentValueFromRow(tr);
 
@@ -188,12 +131,8 @@
 
     DataTable_RowActions_SegmentVisitorLog.prototype.performAction = function (label, tr, e) {
 
-        if ('@' === (label+'').substr(0, 1)) {
-            label = (label+'').substr(1);
-        }
-
         var apiMethod = this.dataTable.param.module + '.' + this.dataTable.param.action;
-        var segment   = this.segment + this.segmentComparison + label;
+        var segment   = encodeURIComponent(label);
 
         this.openPopover(apiMethod, segment, {});
     };
@@ -233,30 +172,27 @@
                 title.remove();
             }
 
-            var segmentParts = segment.split(self.segmentComparison);
             var dataTable    = getDataTableFromApiMethod(apiMethod);
-            var segmentName  = getNameOfSegmentFromDataTable(dataTable, segmentParts[0]);
-            var segmentValue = findTitleOfRowHavingRawSegmentValue(apiMethod, segmentParts[1]);
+            var segmentName  = getDimensionFromApiMethod(apiMethod);
+            var segmentValue = findTitleOfRowHavingRawSegmentValue(apiMethod, segment);
 
             segmentName  = piwikHelper.escape(segmentName);
+            segmentName  = piwikHelper.htmlEntities(segmentName);
             segmentValue = piwikHelper.escape(segmentValue);
+            segmentValue = piwikHelper.htmlEntities(segmentValue);
 
             var title = _pk_translate('SegmentOneClick_SegmentedVisitorLogTitle', [segmentName, segmentValue]);
 
             Piwik_Popover.setTitle(title);
 
-            // TODO remove visitor profile link or close popover??? as we won't have a "go back" link
-            //box.find('.visitor-log-visitor-profile-link').remove();
-            box.find('.visitor-log-visitor-profile-link').click(function () {
-                Piwik_Popover.close();
-            });
+            box.find('.visitor-log-visitor-profile-link').remove();
         };
 
         // prepare loading the popover contents
         var requestParams = {
             module: 'Live',
             action: 'indexVisitorLog',
-            segment: segment,
+            segment: decodeURIComponent(segment),
             disableLink: 1
         };
 
@@ -273,9 +209,8 @@
 
         name: actionName,
 
-        // TODO use correct icons
-        dataTableIcon: 'plugins/Live/images/visitorProfileLaunch.png',
-        dataTableIconHover: 'plugins/Morpheus/images/segment-users.png',
+        dataTableIcon: 'plugins/SegmentOneClick/images/visitorlog.png',
+        dataTableIconHover: 'plugins/SegmentOneClick/images/visitorlog-hover.png',
 
         order: 30,
 
@@ -285,19 +220,21 @@
         ],
 
         isAvailableOnReport: function (dataTableParams, undefined, dataTable) {
-            return !!getFirstSegmentFromDataTable(dataTable);
+            var hasSegment = !!getFirstSegmentFromDataTable(dataTable);
+
+            if (hasSegment) {
+                return true;
+            }
+
+            var segmentFilters = dataTable.$element.find('[data-segment-filter]');
+
+            return !!segmentFilters.length;
         },
 
         isAvailableOnRow: function (dataTableParams, tr) {
-            if (!getRawSegmentValueFromRow(tr)) {
+            var value = getRawSegmentValueFromRow(tr)
+            if ('undefined' === (typeof value)) {
                 return false;
-            }
-
-            if (tr.hasClass('subDataTable')) {
-                if (DataTable_RowActions_SegmentVisitorLog.isPageActionReport(dataTableParams.module, dataTableParams.action))
-                {
-                    return false;
-                }
             }
 
             var reportTitle = null;

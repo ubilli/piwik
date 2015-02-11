@@ -85,10 +85,6 @@ class GroupBy extends BaseFilter
             $groupByColumnValue = $row->getColumn($this->groupByColumn);
             $groupByValue = $groupByColumnValue;
 
-            if ($this->groupByColumn === 'label') {
-                $row->setMetadata('original_label', $groupByValue);
-            }
-
             // reduce the group by column of this row
             if($this->reduceFunction) {
                 $parameters   = array_merge(array($groupByColumnValue), $this->parameters);

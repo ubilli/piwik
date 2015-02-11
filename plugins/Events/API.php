@@ -154,6 +154,7 @@ class API extends \Piwik\Plugin\API
         $this->checkSecondaryDimension($name, $secondaryDimension);
         $recordName = $this->getRecordNameForAction($name, $secondaryDimension);
         $dataTable = Archive::getDataTableFromArchive($recordName, $idSite, $period, $date, $segment, $expanded, $idSubtable);
+        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
         $this->filterDataTable($dataTable);
         return $dataTable;
     }

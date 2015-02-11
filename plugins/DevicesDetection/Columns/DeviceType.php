@@ -24,21 +24,13 @@ class DeviceType extends Base
 
     protected function configureSegments()
     {
-        $deviceTypes    = DeviceParser::getAvailableDeviceTypeNames();
-        $deviceTypeList = implode(", ", $deviceTypes);
+        $deviceTypes = DeviceParser::getAvailableDeviceTypeNames();
 
         $segment = new Segment();
         $segment->setCategory('General_Visit');
         $segment->setSegment('deviceType');
         $segment->setName('DevicesDetection_DeviceType');
-        $segment->setAcceptedValues($deviceTypeList);
-        $segment->setSqlFilter(function ($type) use ($deviceTypeList, $deviceTypes) {
-            $index = array_search(strtolower(trim(urldecode($type))), $deviceTypes);
-            if ($index === false) {
-                throw new Exception("deviceType segment must be one of: $deviceTypeList");
-            }
-            return $index;
-        });
+        $segment->setLabelToValueMapping($deviceTypes);
 
         $this->addSegment($segment);
     }

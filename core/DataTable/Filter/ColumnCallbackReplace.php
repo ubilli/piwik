@@ -88,10 +88,6 @@ class ColumnCallbackReplace extends BaseFilter
                     $value = 0;
                 }
 
-                if ($column === 'label') {
-                    $row->setMetadata('original_label', $value);
-                }
-
                 $parameters = array_merge(array($value), $extraColumnParameters);
 
                 if (!is_null($this->functionParameters)) {
