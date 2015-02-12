@@ -11,7 +11,6 @@
 		<sum_daily_nb_uniq_visitors>11</sum_daily_nb_uniq_visitors>
 		<sum_daily_nb_users>0</sum_daily_nb_users>
 		<logo>plugins/DevicesDetection/images/os/WIN.gif</logo>
-		<segmentFilter>operatingSystemCode==WIN</segmentFilter>
 	</row>
 	<row>
 		<label>Mac</label>
@@ -24,7 +23,6 @@
 		<sum_daily_nb_uniq_visitors>8</sum_daily_nb_uniq_visitors>
 		<sum_daily_nb_users>1</sum_daily_nb_users>
 		<logo>plugins/DevicesDetection/images/os/MAC.gif</logo>
-		<segmentFilter>operatingSystemCode==MAC</segmentFilter>
 	</row>
 	<row>
 		<label>GNU/Linux</label>
@@ -37,7 +35,6 @@
 		<sum_daily_nb_uniq_visitors>8</sum_daily_nb_uniq_visitors>
 		<sum_daily_nb_users>0</sum_daily_nb_users>
 		<logo>plugins/DevicesDetection/images/os/LIN.gif</logo>
-		<segmentFilter>operatingSystemCode==LIN</segmentFilter>
 	</row>
 	<row>
 		<label>Android</label>
@@ -50,7 +47,6 @@
 		<sum_daily_nb_uniq_visitors>3</sum_daily_nb_uniq_visitors>
 		<sum_daily_nb_users>1</sum_daily_nb_users>
 		<logo>plugins/DevicesDetection/images/os/AND.gif</logo>
-		<segmentFilter>operatingSystemCode==AND</segmentFilter>
 	</row>
 	<row>
 		<label>Unknown</label>
@@ -63,7 +59,6 @@
 		<sum_daily_nb_uniq_visitors>3</sum_daily_nb_uniq_visitors>
 		<sum_daily_nb_users>0</sum_daily_nb_users>
 		<logo>plugins/DevicesDetection/images/os/UNK.gif</logo>
-		<segmentFilter>operatingSystemCode==UNK</segmentFilter>
 	</row>
 	<row>
 		<label>Bot</label>
@@ -76,6 +71,5 @@
 		<sum_daily_nb_uniq_visitors>1</sum_daily_nb_uniq_visitors>
 		<sum_daily_nb_users>0</sum_daily_nb_users>
 		<logo>plugins/DevicesDetection/images/os/UNK.gif</logo>
-		<segmentFilter>operatingSystemCode==BOT</segmentFilter>
 	</row>
 </result>

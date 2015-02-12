@@ -56,7 +56,6 @@
 				<sum_visit_length>0</sum_visit_length>
 				<bounce_count>7</bounce_count>
 				<nb_visits_converted>0</nb_visits_converted>
-				<segmentValue>-1</segmentValue>
 			</row>
 		</subtable>
 	</row>
@@ -105,7 +104,6 @@
 				<sum_visit_length>0</sum_visit_length>
 				<bounce_count>2</bounce_count>
 				<nb_visits_converted>0</nb_visits_converted>
-				<segmentFilter>referrerName==-1</segmentFilter>
 			</row>
 		</subtable>
 	</row>

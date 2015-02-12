@@ -86,7 +86,6 @@
 		<sum_visit_length>0</sum_visit_length>
 		<bounce_count>6</bounce_count>
 		<nb_visits_converted>0</nb_visits_converted>
-		<segmentFilter>referrerType==search;referrerName==-1</segmentFilter>
 		<url>URL unknown!</url>
 		<logo>plugins/Referrers/images/searchEngines/xx.png</logo>
 	</row>

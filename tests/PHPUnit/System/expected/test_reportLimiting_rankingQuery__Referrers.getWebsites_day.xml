@@ -82,6 +82,5 @@
 		<sum_visit_length>0</sum_visit_length>
 		<bounce_count>2</bounce_count>
 		<nb_visits_converted>0</nb_visits_converted>
-		<segmentFilter>referrerName==-1</segmentFilter>
 	</row>
 </result>

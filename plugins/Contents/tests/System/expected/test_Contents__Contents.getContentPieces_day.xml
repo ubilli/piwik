@@ -8,6 +8,7 @@
 		<nb_interactions>2</nb_interactions>
 		<interaction_rate>50%</interaction_rate>
 		<contentTarget>http://piwik.org/download</contentTarget>
+		<segmentFilter>contentPiece==Click to download Piwik now</segmentFilter>
 	</row>
 	<row>
 		<label>/path/ad.jpg</label>
@@ -17,6 +18,7 @@
 		<nb_interactions>2</nb_interactions>
 		<interaction_rate>100%</interaction_rate>
 		<contentTarget>http://www.example.com</contentTarget>
+		<segmentFilter>contentPiece==/path/ad.jpg</segmentFilter>
 	</row>
 	<row>
 		<label>/path/ad2.jpg</label>
@@ -26,6 +28,7 @@
 		<nb_interactions>0</nb_interactions>
 		<interaction_rate>0%</interaction_rate>
 		<contentTarget>http://www.example.com</contentTarget>
+		<segmentFilter>contentPiece==/path/ad2.jpg</segmentFilter>
 	</row>
 	<row>
 		<label>Click NOW</label>
@@ -35,6 +38,7 @@
 		<nb_interactions>2</nb_interactions>
 		<interaction_rate>100%</interaction_rate>
 		<contentTarget>http://piwik.org/</contentTarget>
+		<segmentFilter>contentPiece==Click NOW</segmentFilter>
 	</row>
 	<row>
 		<label>movie.mov</label>
@@ -44,6 +48,7 @@
 		<nb_interactions>0</nb_interactions>
 		<interaction_rate>0%</interaction_rate>
 		<contentTarget />
+		<segmentFilter>contentPiece==movie.mov</segmentFilter>
 	</row>
 	<row>
 		<label>Content Piece not defined</label>
@@ -53,6 +58,7 @@
 		<nb_interactions>0</nb_interactions>
 		<interaction_rate>0%</interaction_rate>
 		<contentTarget />
+		<segmentFilter>contentPiece==Piwik_ContentPieceNotSet</segmentFilter>
 	</row>
 	<row>
 		<label>Unknown</label>
@@ -62,5 +68,6 @@
 		<nb_interactions>0</nb_interactions>
 		<interaction_rate>0%</interaction_rate>
 		<contentTarget />
+		<segmentFilter>contentPiece==Unknown</segmentFilter>
 	</row>
 </result>

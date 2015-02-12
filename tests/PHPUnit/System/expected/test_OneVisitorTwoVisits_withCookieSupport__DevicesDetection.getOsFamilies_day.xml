@@ -11,6 +11,5 @@
 		<bounce_count>1</bounce_count>
 		<nb_visits_converted>2</nb_visits_converted>
 		<logo>plugins/DevicesDetection/images/os/WIN.gif</logo>
-		<segmentFilter>operatingSystemCode==WIN</segmentFilter>
 	</row>
 </result>
