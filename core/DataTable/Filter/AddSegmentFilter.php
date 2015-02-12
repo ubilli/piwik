@@ -28,7 +28,7 @@ class AddSegmentFilter extends BaseFilter
     private $delimiter;
 
     /**
-     * Generates a segment filter based on the label column.
+     * Generates a segment filter based on the label column and the given segment names
      *
      * @param DataTable $table
      * @param string|array $segmentOrSegments Either one segment or an array of segments.
@@ -58,6 +58,8 @@ class AddSegmentFilter extends BaseFilter
         $segments  = $this->segments;
 
         if (empty($segments)) {
+            $msg = 'AddSegmentFilter is called without having any segments defined';
+            Development::error($msg);
             return;
         }
 
@@ -104,7 +106,8 @@ class AddSegmentFilter extends BaseFilter
                 }
             });
         } else {
-            $msg = 'Multiple segments are given but no delimiter defined. Segments: ' . implode(', ', $segments);
+            $names = implode(', ', $segments);
+            $msg   = 'Multiple segments are given but no delimiter defined. Segments: ' . $names;
             Development::error($msg);
         }
     }

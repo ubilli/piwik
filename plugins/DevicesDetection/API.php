@@ -126,8 +126,7 @@ class API extends \Piwik\Plugin\API
     public function getOsFamilies($idSite, $period, $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_os', $idSite, $period, $date, $segment);
-        $dataTable->filter('AddSegmentValue');
-
+        
         // handle legacy archives
         if ($dataTable instanceof DataTable\Map || !$dataTable->getRowsCount()) {
             $versionDataTable = $this->getDataTable('DevicesDetection_osVersions', $idSite, $period, $date, $segment);
