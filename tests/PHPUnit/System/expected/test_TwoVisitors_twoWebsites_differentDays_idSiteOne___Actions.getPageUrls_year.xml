@@ -22,6 +22,7 @@
 			<exit_rate>11%</exit_rate>
 			<avg_time_generation>0.301</avg_time_generation>
 			<url>http://example.org/index.htm</url>
+			<segmentFilter>pageUrl==http://example.org/index.htm</segmentFilter>
 		</row>
 		<row>
 			<label>Page URL not defined</label>
@@ -54,6 +55,7 @@
 			<exit_rate>100%</exit_rate>
 			<avg_time_generation>0.313</avg_time_generation>
 			<url>http://example.org/thankyou</url>
+			<segmentFilter>pageUrl==http://example.org/thankyou</segmentFilter>
 		</row>
 		<row>
 			<label>/products</label>
@@ -76,6 +78,7 @@
 			<exit_rate>100%</exit_rate>
 			<avg_time_generation>0.153</avg_time_generation>
 			<url>http://example.org/products</url>
+			<segmentFilter>pageUrl==http://example.org/products</segmentFilter>
 		</row>
 	</result>
 	<result date="2011" />

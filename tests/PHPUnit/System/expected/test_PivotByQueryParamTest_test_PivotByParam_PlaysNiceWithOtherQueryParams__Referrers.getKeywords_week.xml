@@ -4,30 +4,36 @@
 		<label>this search term</label>
 		<Google>1</Google>
 		<Bing>0</Bing>
+		<segmentFilter>referrerKeyword==this search term</segmentFilter>
 	</row>
 	<row>
 		<label>search term 2</label>
 		<Google>0</Google>
 		<Bing>0</Bing>
+		<segmentFilter>referrerKeyword==search term 2</segmentFilter>
 	</row>
 	<row>
 		<label>search term 3</label>
 		<Google>1</Google>
 		<Bing>0</Bing>
+		<segmentFilter>referrerKeyword==search term 3</segmentFilter>
 	</row>
 	<row>
 		<label>search term 4</label>
 		<Google>0</Google>
 		<Bing>1</Bing>
+		<segmentFilter>referrerKeyword==search term 4</segmentFilter>
 	</row>
 	<row>
 		<label>that search term</label>
 		<Google>1</Google>
 		<Bing>0</Bing>
+		<segmentFilter>referrerKeyword==that search term</segmentFilter>
 	</row>
 	<row>
 		<label>search term 1</label>
 		<Google>0</Google>
 		<Bing>1</Bing>
+		<segmentFilter>referrerKeyword==search term 1</segmentFilter>
 	</row>
 </result>

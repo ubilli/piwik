@@ -10,6 +10,7 @@
 		<min_event_value>0</min_event_value>
 		<max_event_value>0</max_event_value>
 		<avg_event_value>0</avg_event_value>
+		<segmentFilter>eventName==Spirited Away (千と千尋の神隠し)</segmentFilter>
 		<subtable>
 			<row>
 				<label>play25%</label>
@@ -89,6 +90,7 @@
 		<min_event_value>0</min_event_value>
 		<max_event_value>0</max_event_value>
 		<avg_event_value>0</avg_event_value>
+		<segmentFilter>eventName==La fiancée de l%26#039%3Beau</segmentFilter>
 		<subtable>
 			<row>
 				<label>play</label>
@@ -157,6 +159,7 @@
 		<min_event_value>0</min_event_value>
 		<max_event_value>0</max_event_value>
 		<avg_event_value>0</avg_event_value>
+		<segmentFilter>eventName==Ponyo (崖の上のポニョ)</segmentFilter>
 		<subtable>
 			<row>
 				<label>playTrailer</label>
@@ -181,6 +184,7 @@
 		<min_event_value>0</min_event_value>
 		<max_event_value>0</max_event_value>
 		<avg_event_value>0</avg_event_value>
+		<segmentFilter>eventName==Princess Mononoke (もののけ姫)</segmentFilter>
 		<subtable>
 			<row>
 				<label>playTrailer</label>

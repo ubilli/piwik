@@ -17,5 +17,6 @@
 		<bounce_rate>0%</bounce_rate>
 		<exit_rate>50%</exit_rate>
 		<url>http://example.org/homepage</url>
+		<segmentFilter>pageUrl==http://example.org/homepage</segmentFilter>
 	</row>
 </result>

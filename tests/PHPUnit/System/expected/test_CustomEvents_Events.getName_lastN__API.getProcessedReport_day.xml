@@ -116,24 +116,31 @@
 	<reportMetadata>
 		<result prettyDate="Sunday 3 January 2010">
 			<row>
+				<segmentFilter>eventName==Spirited Away (千と千尋の神隠し)</segmentFilter>
 				
 			</row>
 			<row>
+				<segmentFilter>eventName==La fiancée de l%26#039%3Beau</segmentFilter>
 				
 			</row>
 			<row>
+				<segmentFilter>eventName==Piwik_EventNameNotSet</segmentFilter>
 				
 			</row>
 			<row>
+				<segmentFilter>eventName==event name Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long ---%26gt%3B SHOULD APPEAR IN TEST OUTPUT NOT TRUNCATED %26lt%3B---</segmentFilter>
 				
 			</row>
 			<row>
+				<segmentFilter>eventName==Ponyo (崖の上のポニョ)</segmentFilter>
 				
 			</row>
 			<row>
+				<segmentFilter>eventName==Princess Mononoke (もののけ姫)</segmentFilter>
 				
 			</row>
 			<row>
+				<segmentFilter>eventName==Search query here</segmentFilter>
 				
 			</row>
 		</result>

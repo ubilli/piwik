@@ -55,6 +55,7 @@
 	<reportMetadata>
 		<row>
 			<url>http://example.org/store/purchase.htm</url>
+			<segmentFilter>pageUrl==http://example.org/store/purchase.htm</segmentFilter>
 		</row>
 	</reportMetadata>
 	<reportTotal>

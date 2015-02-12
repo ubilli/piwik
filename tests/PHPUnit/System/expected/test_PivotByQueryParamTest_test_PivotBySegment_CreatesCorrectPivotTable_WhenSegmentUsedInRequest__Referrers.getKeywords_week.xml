@@ -3,9 +3,11 @@
 	<row>
 		<col name="label">that search term</col>
 		<col name="1. Melbourne, Victoria, Australia">2</col>
+		<col name="segmentFilter">referrerKeyword==that search term</col>
 	</row>
 	<row>
 		<col name="label">this search term</col>
 		<col name="1. Melbourne, Victoria, Australia">2</col>
+		<col name="segmentFilter">referrerKeyword==this search term</col>
 	</row>
 </result>

@@ -10,6 +10,7 @@
 		<max_event_value>9.66</max_event_value>
 		<sum_daily_nb_uniq_visitors>16</sum_daily_nb_uniq_visitors>
 		<avg_event_value>9.66</avg_event_value>
+		<segmentFilter>eventName==Spirited Away (千と千尋の神隠し)</segmentFilter>
 		<subtable>
 			<row>
 				<label>clickBuyNow</label>
@@ -111,6 +112,7 @@
 		<max_event_value>10</max_event_value>
 		<sum_daily_nb_uniq_visitors>12</sum_daily_nb_uniq_visitors>
 		<avg_event_value>9.5</avg_event_value>
+		<segmentFilter>eventName==La fiancée de l%26#039%3Beau</segmentFilter>
 		<subtable>
 			<row>
 				<label>play</label>
@@ -190,6 +192,7 @@
 		<max_event_value>0</max_event_value>
 		<sum_daily_nb_uniq_visitors>4</sum_daily_nb_uniq_visitors>
 		<avg_event_value>0</avg_event_value>
+		<segmentFilter>eventName==Piwik_EventNameNotSet</segmentFilter>
 		<subtable>
 			<row>
 				<label>Search</label>
@@ -225,6 +228,7 @@
 		<max_event_value>9.66</max_event_value>
 		<sum_daily_nb_uniq_visitors>2</sum_daily_nb_uniq_visitors>
 		<avg_event_value>9.66</avg_event_value>
+		<segmentFilter>eventName==event name Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long ---%26gt%3B SHOULD APPEAR IN TEST OUTPUT NOT TRUNCATED %26lt%3B---</segmentFilter>
 		<subtable>
 			<row>
 				<label>event action Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long Extremely long ---&gt; SHOULD APPEAR IN TEST OUTPUT NOT TRUNCATED &lt;---</label>
@@ -249,6 +253,7 @@
 		<max_event_value>0</max_event_value>
 		<sum_daily_nb_uniq_visitors>2</sum_daily_nb_uniq_visitors>
 		<avg_event_value>0</avg_event_value>
+		<segmentFilter>eventName==Ponyo (崖の上のポニョ)</segmentFilter>
 		<subtable>
 			<row>
 				<label>playTrailer</label>
@@ -273,6 +278,7 @@
 		<max_event_value>0</max_event_value>
 		<sum_daily_nb_uniq_visitors>2</sum_daily_nb_uniq_visitors>
 		<avg_event_value>0</avg_event_value>
+		<segmentFilter>eventName==Princess Mononoke (もののけ姫)</segmentFilter>
 		<subtable>
 			<row>
 				<label>playTrailer</label>
@@ -297,6 +303,7 @@
 		<max_event_value>0</max_event_value>
 		<sum_daily_nb_uniq_visitors>2</sum_daily_nb_uniq_visitors>
 		<avg_event_value>0</avg_event_value>
+		<segmentFilter>eventName==Search query here</segmentFilter>
 		<subtable>
 			<row>
 				<label>Search</label>
