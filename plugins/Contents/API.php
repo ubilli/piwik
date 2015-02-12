@@ -39,7 +39,7 @@ class API extends \Piwik\Plugin\API
         $dataTable  = Archive::getDataTableFromArchive($recordName, $idSite, $period, $date, $segment, $expanded, $idSubtable);
 
         if (empty($idSubtable)) {
-            $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
+            $dataTable->filter('AddSegmentValue');
         }
 
         $this->filterDataTable($dataTable);

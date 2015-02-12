@@ -54,18 +54,8 @@ class API extends \Piwik\Plugin\API
         // ensure all device types are in the list
         $this->ensureDefaultRowsInTable($dataTable);
 
-        $dataTable->filter(function (DataTable $dataTable) {
-            $segmentNames = DeviceParserAbstract::getAvailableDeviceTypeNames();
-
-            foreach ($dataTable->getRows() as $row) {
-                $label = $row->getColumn('label');
-                if (!empty($segmentNames[$label])) {
-                    $filter = 'deviceType==' . $segmentNames[$label];
-                    $row->setMetadata('segmentFilter', $filter);
-                }
-            }
-        });
-
+        $mapping = DeviceParserAbstract::getAvailableDeviceTypeNames();
+        $dataTable->filter('AddSegmentFilterByLabelMapping', array('deviceType', $mapping));
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'logo', __NAMESPACE__ . '\getDeviceTypeLogo'));
         $dataTable->filter('ColumnCallbackReplace', array('label', __NAMESPACE__ . '\getDeviceTypeLabel'));
         return $dataTable;
@@ -136,7 +126,7 @@ class API extends \Piwik\Plugin\API
     public function getOsFamilies($idSite, $period, $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_os', $idSite, $period, $date, $segment);
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
+        $dataTable->filter('AddSegmentValue');
 
         // handle legacy archives
         if ($dataTable instanceof DataTable\Map || !$dataTable->getRowsCount()) {
@@ -207,19 +197,9 @@ class API extends \Piwik\Plugin\API
     public function getOsVersions($idSite, $period, $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_osVersions', $idSite, $period, $date, $segment);
-        $dataTable->filter(function (DataTable $dataTable) {
-            foreach ($dataTable->getRows() as $row) {
-                $label = $row->getColumn('label');
-                if (!empty($label)) {
-                    $parts = explode(';', $label);
 
-                    if (count($parts) === 2) {
-                        $filter = 'operatingSystemCode==' . $parts[0];
-                        $row->setMetadata('segmentFilter', $filter);
-                    }
-                }
-            }
-        });
+        $segments = array('operatingSystemCode', ''); // we only want the first part of the exploded value
+        $dataTable->filter('AddSegmentFilter', array($segments, Archiver::BROWSER_SEPARATOR));
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'logo', __NAMESPACE__ . '\getOsLogo'));
         // use GroupBy filter to avoid duplicate rows if old (UserSettings) and new (DevicesDetection) reports were combined
         $dataTable->filter('GroupBy', array('label', __NAMESPACE__ . '\getOsFullName'));
@@ -252,7 +232,7 @@ class API extends \Piwik\Plugin\API
     public function getBrowsers($idSite, $period, $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_browsers', $idSite, $period, $date, $segment);
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
+        $dataTable->filter('AddSegmentValue');
 
         // handle legacy archives
         if ($dataTable instanceof DataTable\Map || !$dataTable->getRowsCount()) {
@@ -276,19 +256,9 @@ class API extends \Piwik\Plugin\API
     public function getBrowserVersions($idSite, $period, $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_browserVersions', $idSite, $period, $date, $segment);
-        $dataTable->filter(function (DataTable $dataTable) {
-            foreach ($dataTable->getRows() as $row) {
-                $label = $row->getColumn('label');
-                if (!empty($label)) {
-                    $parts = explode(';', $label);
 
-                    if (count($parts) === 2) {
-                        $filter = 'browserCode==' . $parts[0] . ';browserVersion==' . $parts[1];
-                        $row->setMetadata('segmentFilter', $filter);
-                    }
-                }
-            }
-        });
+        $segments = array('browserCode', 'browserVersion');
+        $dataTable->filter('AddSegmentFilter', array($segments, Archiver::BROWSER_SEPARATOR));
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'logo', __NAMESPACE__ . '\getBrowserLogo'));
         $dataTable->filter('ColumnCallbackReplace', array('label', __NAMESPACE__ . '\getBrowserNameWithVersion'));
         return $dataTable;
@@ -305,7 +275,7 @@ class API extends \Piwik\Plugin\API
     public function getBrowserEngines($idSite, $period, $date, $segment = false)
     {
         $dataTable = $this->getDataTable('DevicesDetection_browserEngines', $idSite, $period, $date, $segment);
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
+        $dataTable->filter('AddSegmentValue');
         // use GroupBy filter to avoid duplicate rows if old (UserSettings) and new (DevicesDetection) reports were combined
         $dataTable->filter('GroupBy', array('label',  __NAMESPACE__ . '\getBrowserEngineName'));
         return $dataTable;

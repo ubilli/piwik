@@ -135,7 +135,7 @@ class API extends \Piwik\Plugin\API
     public function getKeywords($idSite, $period, $date, $segment = false, $expanded = false)
     {
         $dataTable = $this->getDataTable(Archiver::KEYWORDS_RECORD_NAME, $idSite, $period, $date, $segment, $expanded);
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
+        $dataTable->filter('AddSegmentValue');
         $dataTable = $this->handleKeywordNotDefined($dataTable);
         return $dataTable;
     }
@@ -234,15 +234,9 @@ class API extends \Piwik\Plugin\API
     public function getSearchEngines($idSite, $period, $date, $segment = false, $expanded = false)
     {
         $dataTable = $this->getDataTable(Archiver::SEARCH_ENGINES_RECORD_NAME, $idSite, $period, $date, $segment, $expanded);
-        $dataTable->filter(function (DataTable $dataTable) {
-            foreach ($dataTable->getRows() as $row) {
-                $label = $row->getColumn('label');
-                if (!empty($label)) {
-                    $filter = 'referrerType==search;referrerName==' . $label;
-                    $row->setMetadata('segmentFilter', $filter);
-                }
-            }
-        });
+
+        $dataTable->filter('AddSegmentFilter', array('referrerName'));
+        $dataTable->queueFilter('PrependSegmentFilter', array('referrerType==search;'));
         $dataTable->queueFilter('ColumnCallbackAddMetadata', array('label', 'url', __NAMESPACE__ . '\getSearchEngineUrlFromName'));
         $dataTable->queueFilter('MetadataCallbackAddMetadata', array('url', 'logo', __NAMESPACE__ . '\getSearchEngineLogoFromUrl'));
         return $dataTable;
@@ -282,15 +276,10 @@ class API extends \Piwik\Plugin\API
     public function getCampaigns($idSite, $period, $date, $segment = false, $expanded = false)
     {
         $dataTable = $this->getDataTable(Archiver::CAMPAIGNS_RECORD_NAME, $idSite, $period, $date, $segment, $expanded);
-        $dataTable->filter(function (DataTable $dataTable) {
-            foreach ($dataTable->getRows() as $row) {
-                $label = $row->getColumn('label');
-                if (!empty($label)) {
-                    $filter = 'referrerType==campaign;referrerName==' . $label;
-                    $row->setMetadata('segmentFilter', $filter);
-                }
-            }
-        });
+
+        $dataTable->filter('AddSegmentFilter', array('referrerName'));
+        $dataTable->queueFilter('PrependSegmentFilter', array('referrerType==campaign;'));
+
         return $dataTable;
     }
 
@@ -303,15 +292,7 @@ class API extends \Piwik\Plugin\API
     public function getWebsites($idSite, $period, $date, $segment = false, $expanded = false)
     {
         $dataTable = $this->getDataTable(Archiver::WEBSITES_RECORD_NAME, $idSite, $period, $date, $segment, $expanded);
-        $dataTable->filter(function (DataTable $dataTable) {
-            foreach ($dataTable->getRows() as $row) {
-                $label = $row->getColumn('label');
-                if (!empty($label)) {
-                    $filter = 'referrerName==' . $label;
-                    $row->setMetadata('segmentFilter', $filter);
-                }
-            }
-        });
+        $dataTable->filter('AddSegmentFilter', array('referrerName'));
         return $dataTable;
     }
 

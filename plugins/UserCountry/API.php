@@ -32,7 +32,7 @@ class API extends \Piwik\Plugin\API
         $dataTable = $this->getDataTable(Archiver::COUNTRY_RECORD_NAME, $idSite, $period, $date, $segment);
 
         // apply filter on the whole datatable in order the inline search to work (searches are done on "beautiful" label)
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
+        $dataTable->filter('AddSegmentValue');
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'code'));
         $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'logo', __NAMESPACE__ . '\getFlagFromCode'));
         $dataTable->filter('ColumnCallbackReplace', array('label', __NAMESPACE__ . '\countryTranslate'));
@@ -68,19 +68,9 @@ class API extends \Piwik\Plugin\API
     public function getRegion($idSite, $period, $date, $segment = false)
     {
         $dataTable = $this->getDataTable(Archiver::REGION_RECORD_NAME, $idSite, $period, $date, $segment);
-        $dataTable->filter(function (DataTable $dataTable) {
-            foreach ($dataTable->getRows() as $row) {
-                $label = $row->getColumn('label');
-                if (!empty($label)) {
-                    $parts = explode(Archiver::LOCATION_SEPARATOR, $label);
 
-                    if (count($parts) === 2) {
-                        $filter = 'regionCode==' . $parts[0] . ';countryCode==' . $parts[1];
-                        $row->setMetadata('segmentFilter', $filter);
-                    }
-                }
-            }
-        });
+        $segments = array('regionCode', 'countryCode');
+        $dataTable->filter('AddSegmentFilter', array($segments, Archiver::LOCATION_SEPARATOR));
 
         $separator = Archiver::LOCATION_SEPARATOR;
         $unk = Visit::UNKNOWN_CODE;
@@ -123,20 +113,9 @@ class API extends \Piwik\Plugin\API
     public function getCity($idSite, $period, $date, $segment = false)
     {
         $dataTable = $this->getDataTable(Archiver::CITY_RECORD_NAME, $idSite, $period, $date, $segment);
-        $dataTable->filter(function (DataTable $dataTable) {
-            foreach ($dataTable->getRows() as $row) {
-                $label = $row->getColumn('label');
-                if (!empty($label)) {
-                    $parts = explode(Archiver::LOCATION_SEPARATOR, $label);
 
-                    if (count($parts) === 3) {
-                        $filter = 'city==' . $parts[0] . ';regionCode==' . $parts[1] . ';countryCode==' . $parts[2];
-                        $row->setMetadata('segmentFilter', $filter);
-                    }
-
-                }
-            }
-        });
+        $segments = array('city', 'regionCode', 'countryCode');
+        $dataTable->filter('AddSegmentFilter', array($segments, Archiver::LOCATION_SEPARATOR));
 
         $separator = Archiver::LOCATION_SEPARATOR;
         $unk = Visit::UNKNOWN_CODE;

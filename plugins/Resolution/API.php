@@ -37,7 +37,7 @@ class API extends \Piwik\Plugin\API
     public function getResolution($idSite, $period, $date, $segment = false)
     {
         $dataTable = $this->getDataTable(Archiver::RESOLUTION_RECORD_NAME, $idSite, $period, $date, $segment);
-        $dataTable->filter('ColumnCallbackAddMetadata', array('label', 'segmentValue'));
+        $dataTable->filter('AddSegmentValue');
         return $dataTable;
     }
 
