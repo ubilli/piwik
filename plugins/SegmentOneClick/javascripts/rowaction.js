@@ -155,8 +155,6 @@
             var title = _pk_translate('SegmentOneClick_SegmentedVisitorLogTitle', [segmentName, segmentValue]);
 
             Piwik_Popover.setTitle(title);
-
-            box.find('.visitor-log-visitor-profile-link').remove();
         };
 
         // prepare loading the popover contents
@@ -164,7 +162,9 @@
             module: 'Live',
             action: 'indexVisitorLog',
             segment: decodeURIComponent(segment),
-            disableLink: 1
+            disableLink: 1,
+            small: 1,
+            hideProfileLink: 1
         };
 
         $.extend(requestParams, extraParams);
